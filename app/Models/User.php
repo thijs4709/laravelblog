@@ -52,8 +52,8 @@ class User extends Authenticatable
         return $this->belongsTo(Photo::class);
     }
     public function isAdmin(){
-        foreach($this->roles() as $role){
-            if ($role->name == 'adminstrator' && $this->is_active == 1){
+        foreach($this->roles as $role){
+            if ($role->name == 'administrator' && $this->is_active == 1){
                 return true;
             }
         }
