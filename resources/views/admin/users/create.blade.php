@@ -5,7 +5,7 @@
 @section('content')
     <h1>Create User</h1>
     @include('includes.form_error')
-    {!! Form::open(['methode'=>'Post', 'action'=> 'App\Http\Controllers\AdminUsersController@store', 'files'=>true]) !!}
+    {!! Form::open(['methode'=>'POST', 'action'=> 'App\Http\Controllers\AdminUsersController@store', 'files'=>true]) !!}
     <div class="form-group">
         {!! Form::label('name', 'Name :') !!}
         {!! Form::text('name', null, ['class'=>'form-control']) !!}

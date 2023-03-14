@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\UsersSoftDelete;
 use App\Http\Requests\UsersRequest;
 use App\Models\Photo;
 use App\Models\Role;
@@ -20,12 +21,12 @@ class AdminUsersController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function index()
     {
         //
-        $users = User::orderByDesc('id')->withTrashed()->paginate(10);
+        $users = User::with(['roles','photo'])->orderByDesc('id')->withTrashed()->paginate(10);
 //        $users = DB::table('users')->get(); //eerste stap voor hieronder om alles van users weet te geven
 //        $users = DB::table('users') //dit gebruik je als je moeilijke querries moet schrijven (doet het zelfde als  $users = DB::table('users')->get();)
 //            ->select('users.id as user_id', 'photo_id', 'users.name as user_name', 'users.email', DB::raw('GROUP_CONCAT(roles.name) as role_names'), 'is_active', 'users.created_at as user_created_at', 'users.updated_at as user_updated_at')
@@ -49,7 +50,7 @@ class AdminUsersController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function create()
     {
@@ -68,7 +69,7 @@ class AdminUsersController extends Controller
     public function index2()
     {
         //
-        $users = User::orderByDesc('id')->withTrashed()->paginate(10);
+        $users = User::with('photo','roles')->orderByDesc('id')->withTrashed()->paginate(10);
         return view("admin.users.index2", ["users" => $users]);
     }
 
@@ -131,7 +132,7 @@ class AdminUsersController extends Controller
 ////        }
         $user = User::findOrFail($id);
         $roles = Role::pluck('name','id')->all();
-        return view('admin.users.edit',compact('user','roles'));
+        return view('admin.users.edit', compact('user','roles'));
     }
 
     /**
@@ -198,12 +199,19 @@ class AdminUsersController extends Controller
         //
         $name = User::findOrFail($id)->name;
         $id1 = User::findOrFail($id)->id;
-        User::findOrFail($id)->delete();
+
+        $user = User::findOrFail($id);
+        //overdracht naar het event
+        UsersSoftDelete::dispatch($user);
+        //delete van users
+        $user->delete();
         //return redirect('/admin/users')
         return redirect()->route('users.index')->with('status', " User $name deleted! (id = $id1)");
     }
     protected function userRestore($id){
         User::onlyTrashed()->where('id', $id)->restore();
+        $user = User::withTrashed()->where('id',$id)->first();
+        $user->posts()->onlyTrashed()->restore();
         //return redirect('admin/users');
         //return redirect()->route('admin.users');
         $name = User::findOrFail($id)->name;
