@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,6 +21,17 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        $this->call([RoleSeeder::class, PhotoSeeder::class, UsersTableSeeder::class, UsersRolesTableSeeder::class,PostSeeder::class,CategorySeeder::class,PostCategorySeed::class]);
+        DB::statement("SET FOREIGN_KEY_CHECKS=0;");
+        $this->call([
+            RoleSeeder::class,
+            PhotoSeeder::class,
+            UsersTableSeeder::class,
+            UsersRolesTableSeeder::class,
+            PostSeeder::class,
+            CategorySeeder::class,
+            PostCategorySeed::class,
+            CommentSeeder::class,
+        ]);
+        DB::statement("SET FOREIGN_KEY_CHECKS=1;");
     }
 }

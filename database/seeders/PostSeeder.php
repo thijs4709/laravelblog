@@ -16,15 +16,17 @@ class PostSeeder extends Seeder
     public function run()
     {
         //
-//        Post::factory()->count(5000)->create();
-        $schunkSize = 1000;
-        $postCount = 5000;
+        //        Post::factory()->count(5000)->create();
+        $schunkSize = 100;
+        $postCount = 500;
 
-        $posts = Post::factory()->count($postCount)->make();
+        $posts = Post::factory()
+            ->count($postCount)
+            ->make();
         $chunks = array_chunk($posts->toArray(), $schunkSize);
 
-        foreach ($chunks as $chunk){
+        foreach ($chunks as $chunk) {
             Post::insert($chunk);
-        };
+        }
     }
 }

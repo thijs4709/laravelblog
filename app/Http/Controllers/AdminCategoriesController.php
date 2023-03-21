@@ -16,8 +16,10 @@ class AdminCategoriesController extends Controller
     public function index()
     {
         //
-        $categories = Category::orderByDesc('id')->withTrashed()->paginate(5);
-        return view("admin.categories.index", compact('categories'));
+        $categories = Category::orderByDesc("id")
+            ->withTrashed()
+            ->paginate(5);
+        return view("admin.categories.index", compact("categories"));
     }
 
     /**
@@ -40,20 +42,22 @@ class AdminCategoriesController extends Controller
     public function store(Request $request)
     {
         //
-        request()->validate([
-            'name'=>['required','between:2,255'],
-        ],
-        [
-            'name.required' => 'Name is required',
-            'title.between'=> 'Name between 2 and 255 characters',
-        ]);
+        request()->validate(
+            [
+                "name" => ["required", "between:2,255"],
+            ],
+            [
+                "name.required" => "Name is required",
+                "title.between" => "Name between 2 and 255 characters",
+            ]
+        );
         $category = new category();
         $category->name = $request->name;
 
         $category->save();
 
         $category->posts()->sync($request->posts, false);
-        return redirect('admin/categories');
+        return redirect("admin/categories");
     }
 
     /**
@@ -77,7 +81,7 @@ class AdminCategoriesController extends Controller
     {
         //
         $category = Category::findOrFail($id);
-        return view("admin.categories.edit", compact('category'));
+        return view("admin.categories.edit", compact("category"));
     }
 
     /**
@@ -90,21 +94,23 @@ class AdminCategoriesController extends Controller
     public function update(Request $request, $id)
     {
         //
-        request()->validate([
-            'name'=>['required','between:2,255'],
-        ],
-        [
-            'name.required' => 'Name is required',
-            'title.between'=> 'Name between 2 and 255 characters',
-        ]);
-        $category = new Category();
+        request()->validate(
+            [
+                "name" => ["required", "between:2,255"],
+            ],
+            [
+                "name.required" => "Name is required",
+                "title.between" => "Name between 2 and 255 characters",
+            ]
+        );
+        $category = Category::findOrFail($id);
         $category->name = $request->name;
 
         $category->save();
 
-        $category->posts()->sync($request->posts, false);
-
-        return redirect()->route('categories.index')->with('status', 'Category updated successfully!');
+        return redirect()
+            ->route("categories.index")
+            ->with("status", "Category updated successfully!");
     }
 
     /**
@@ -117,14 +123,18 @@ class AdminCategoriesController extends Controller
     {
         //
         Category::findOrFail($id)->delete();
-        return redirect()->route('categories.index')->with('status', 'Category Deleted');
+        return redirect()
+            ->route("categories.index")
+            ->with("status", "Category Deleted");
     }
-    protected function categoryRestore($id){
-
-        Category::onlyTrashed()->where('id', $id)->restore();
+    protected function categoryRestore($id)
+    {
+        Category::onlyTrashed()
+            ->where("id", $id)
+            ->restore();
         //return redirect('admin/users');
         //return redirect()->route('admin.users');
         $name = Category::findOrFail($id)->name;
-        return back()->with('status'," Post: $name restored!");
+        return back()->with("status", " Post: $name restored!");
     }
 }

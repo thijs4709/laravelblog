@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('photo_id')->unsigned()->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->unsigned()->constrained()->cascadeOnDelete();
             $table->string('title');
+            $table->string('slug')->unique();
             $table->text('body');
             $table->timestamps();
             $table->softDeletes();

@@ -21,4 +21,10 @@
             </div>
         </div>
     </div>
+    <div>
+        <div class="d-flex justify-content-between mb-3 my-5 shadow-lg p-3 mb-5 bg-body-tertiary rounded">
+            <h2>Comments on this post</h2>
+            <a class="btn btn-primary mx-1 my-2 rounded-pill" href="{{ route('comments.index') }}">All Comments</a>
+        </div>
+    </div>
 @endsection

@@ -6,6 +6,7 @@ use App\Models\Photo;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Post>
@@ -19,14 +20,17 @@ class PostFactory extends Factory
      */
     public function definition()
     {
-        $userIds = User::pluck('id')->toArray();
-        $photoIds = Photo::pluck('id')->toArray();
+        $userIds = User::pluck("id")->toArray();
+        $photoIds = Photo::pluck("id")->toArray();
+        $title = fake()->sentence();
+        $slug = Str::slug($title);
         return [
             //
-            'user_id'=>fake()->randomElement($userIds),
-            'photo_id'=>fake()->randomElement($photoIds),
-            'title'=>fake()->sentence(),
-            'body'=>fake()->paragraph(),
+            "user_id" => fake()->randomElement($userIds),
+            "photo_id" => fake()->randomElement($photoIds),
+            "title" => $title,
+            "slug" => $slug,
+            "body" => fake()->paragraph(100, true),
         ];
     }
 }

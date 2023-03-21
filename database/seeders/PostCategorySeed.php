@@ -18,9 +18,12 @@ class PostCategorySeed extends Seeder
     {
         //
         $categories = Category::all();
-        Post::all()->each(function ($post) use ($categories){
+        Post::all()->each(function ($post) use ($categories) {
             $post->categories()->attach(
-                $categories->pluck('id')->random(rand(1,10))->toArray()
+                $categories
+                    ->pluck("id")
+                    ->random(rand(1, $categories->count()))
+                    ->toArray()
             );
         });
     }

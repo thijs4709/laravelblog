@@ -22,7 +22,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $fillable = [
         "name",
-//        "role_id",
+        //        "role_id",
         "is_active",
         "email",
         "photo_id",
@@ -44,22 +44,30 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         "email_verified_at" => "datetime",
     ];
-
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
     public function roles()
     {
-        return $this->belongsToMany(Role::class,'user_role');
+        return $this->belongsToMany(Role::class, "user_role");
     }
-    public function photo(){
+    public function photo()
+    {
         return $this->belongsTo(Photo::class);
     }
-    public function posts(){
+    public function posts()
+    {
         return $this->hasMany(Post::class);
     }
-    public function isAdmin(){
-        foreach($this->roles as $role){
-            if ($role->name == 'administrator' && $this->is_active == 1){
+    public function isAdmin()
+    {
+        foreach ($this->roles as $role) {
+            if ($role->name == "administrator" && $this->is_active == 1) {
                 return true;
             }
         }
     }
 }
+//belongsToMany als je een veel op veel relatie hebt
+//hasMany als je een een op veel relatie hebt
