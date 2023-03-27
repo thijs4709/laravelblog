@@ -105,7 +105,13 @@ class AdminUsersController extends Controller
         /*wegschrijven van meerder rollen in de tussentabel*/
         $user->roles()->sync($request->roles, false);
 
-        return redirect("admin/users");
+        return redirect("admin/users")->with([
+            "alert" => [
+                "model" => "user",
+                "type" => "success",
+                "message" => "Added",
+            ],
+        ]);
         //return redirect()->route('users.index'); //->route() is voor als je de alias wilt gebruiken
         //return back()->withInput();
         //return back(); //dit is zonder input

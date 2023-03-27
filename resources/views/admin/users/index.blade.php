@@ -4,11 +4,10 @@
 @endsection
 @section('content')
     <h1>USERS</h1>
-    @if(session('status'))
-        <div class="alert alert-success">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
-            <strong>Success!</strong>{{session('status')}}
-        </div>
+    @if(session('alert'))
+    <x-alert :model="session('alert')['model']" :type="session('alert')['type']" :message="session('alert')['message']">
+        <x-slot name="title">Users: fmkdsqjfm qjkf jdsmq smfd</x-slot>
+    </x-alert>
     @endif
     <table class="table table-striped">
         <thead>
@@ -36,9 +35,7 @@
 
                 <td>
                     <a href="{{route('users.edit',$user->id)}}">
-                        <img class="img-thumbnail" width="62" height="62"
-                             src="{{$user->photo ? asset($user->photo->file) : 'http://via.placeholder.com/62x62'}}"
-                             alt="{{$user->name}}">
+                        <x-img :model="$user" :alt="$user->name" sizeimgnf="62x62" ></x-img>
                     </a>
                 </td>
                 <td><a href="{{route('users.edit',$user->id)}}">{{$user->name}}</a></td>

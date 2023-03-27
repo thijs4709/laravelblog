@@ -221,58 +221,64 @@
 
     <!-- Welcome Blog Slide Area Start -->
     <section class="welcome-blog-post-slide owl-carousel">
-        <!-- Single Blog Post -->
-        <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/1.jpg')}});">
-            <!-- Single Blog Post Content -->
-            <div class="single-blog-post-content">
-                <div class="tags">
-                    <a href="#">crypto</a>
-                </div>
-                <h3><a href="#" class="font-pt">Crypto world goes mad</a></h3>
-                <div class="date">
-                    <a href="#">March 29, 2018</a>
-                </div>
-            </div>
-        </div>
-        <!-- Single Blog Post -->
-        <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/2.jpg')}});">
-            <!-- Single Blog Post Content -->
-            <div class="single-blog-post-content">
-                <div class="tags">
-                    <a href="#">live</a>
-                </div>
-                <h3><a href="#" class="font-pt">The latest news live</a></h3>
-                <div class="date">
-                    <a href="#">March 29, 2018</a>
+
+            <!-- Single Blog Post -->
+        @foreach($postsTickers as $postTicker)
+            <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/1.jpg')}});">
+                <!-- Single Blog Post Content -->
+                <div class="single-blog-post-content">
+                    <div class="tags">
+                        @foreach($postTicker->categories as $category)
+                            <a href="#">{{$category->name}}</a>
+                        @endforeach
+                    </div>
+                    <h3><a href="{{route('frontend.post',$postTicker->slug)}}" class="font-pt">{{$postTicker->title}}</a></h3>
+                    <div class="date">
+                        <a href="#">{{$postTicker->created_at ? $postTicker->created_at->diffForhumans() : ''}}</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <!-- Single Blog Post -->
-        <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/3.jpg')}});">
-            <!-- Single Blog Post Content -->
-            <div class="single-blog-post-content">
-                <div class="tags">
-                    <a href="#">politics</a>
-                </div>
-                <h3><a href="#" class="font-pt">Financial advices </a></h3>
-                <div class="date">
-                    <a href="#">March 29, 2018</a>
-                </div>
-            </div>
-        </div>
-        <!-- Single Blog Post -->
-        <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/2.jpg')}});">
-            <!-- Single Blog Post Content -->
-            <div class="single-blog-post-content">
-                <div class="tags">
-                    <a href="#">live</a>
-                </div>
-                <h3><a href="#" class="font-pt">The latest news live</a></h3>
-                <div class="date">
-                    <a href="#">March 29, 2018</a>
+        @endforeach
+            <!-- Single Blog Post -->
+            <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/2.jpg')}});">
+                <!-- Single Blog Post Content -->
+                <div class="single-blog-post-content">
+                    <div class="tags">
+                        <a href="#">live</a>
+                    </div>
+                    <h3><a href="#" class="font-pt">The latest news live</a></h3>
+                    <div class="date">
+                        <a href="#">March 29, 2018</a>
+                    </div>
                 </div>
             </div>
-        </div>
+            <!-- Single Blog Post -->
+            <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/3.jpg')}});">
+                <!-- Single Blog Post Content -->
+                <div class="single-blog-post-content">
+                    <div class="tags">
+                        <a href="#">politics</a>
+                    </div>
+                    <h3><a href="#" class="font-pt">Financial advices </a></h3>
+                    <div class="date">
+                        <a href="#">March 29, 2018</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Single Blog Post -->
+            <div class="single-blog-post-slide bg-img background-overlay-5" style="background-image: url({{asset('img/imagesfront/bg-img/2.jpg')}});">
+                <!-- Single Blog Post Content -->
+                <div class="single-blog-post-content">
+                    <div class="tags">
+                        <a href="#">live</a>
+                    </div>
+                    <h3><a href="#" class="font-pt">The latest news live</a></h3>
+                    <div class="date">
+                        <a href="#">March 29, 2018</a>
+                    </div>
+                </div>
+            </div>
+
     </section>
     <!-- Welcome Blog Slide Area End -->
 

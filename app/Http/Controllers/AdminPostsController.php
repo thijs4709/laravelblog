@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Comment;
+use App\Models\Keyword;
 use App\Models\Photo;
 use App\Models\Post;
 use App\Models\User;
@@ -42,8 +43,9 @@ class AdminPostsController extends Controller
     public function create()
     {
         //
+        $keywords = Keyword::all();
         $categories = Category::all();
-        return view("admin.posts.create", compact("categories"));
+        return view("admin.posts.create", compact("categories", "keywords"));
     }
 
     /**
@@ -87,9 +89,19 @@ class AdminPostsController extends Controller
         $post->save();
         /*aangeduide categoriëen overschrijven en eventuele vorige deleten of nieuwe toevoegen*/
         $post->categories()->sync($request->categories, false);
+        foreach ($request->keywords as $keyword) {
+            $keywordfind = Keyword::findOrFail($keyword);
+            $post->keywords()->save($keywordfind);
+        }
         return redirect()
             ->route("posts.index")
-            ->with("status", "Post Updated");
+            ->with([
+                "alert" => [
+                    "model" => "post",
+                    "type" => "success",
+                    "message" => " Post Added",
+                ],
+            ]);
     }
     /**
      * Display the specified resource.
@@ -187,7 +199,9 @@ class AdminPostsController extends Controller
         Post::findOrFail($id)->delete();
         return redirect()
             ->route("posts.index")
-            ->with("status", "Post Deleted");
+            ->with([
+                "alert" => ["type" => "danger", "message" => "Post deleted"],
+            ]);
     }
     public function indexByAuthor(User $author)
     {
@@ -210,13 +224,37 @@ class AdminPostsController extends Controller
         return back()->with("status", " Post: $name restored! (id = $id1)");
     }
     /**frontend methods**/
-    public function post($id)
+    public function post(Post $post)
     {
-        $post = Post::findOrFail($id);
-        $postsTickers = Post::latest("created_at")
-            ->take(6)
-            ->get();
-        $categories = Category::all();
-        return view("post", compact("post", "postsTickers", "categories"));
+        //load werkt via de querrybuilder en verwekt een instantie van de querybuilder
+        //        $post = $post
+        //            ->load(["comments.user", "comments.children.user"])
+        //            ->firstOrFail();
+
+        //with werkt via het eloquent model en gaat via Post model instantie.
+        $post = $post
+            ->with(["comments.user", "comments.children.user"])
+            ->findOrFail($post->id);
+
+        //deze lijnen staan in de CommonViewServiceProvider
+        //        $postsTickers = Post::latest("created_at")
+        //            ->take(6)
+        //            ->get();
+        //        $categories = Category::all();
+        return view("post", compact("post"));
+
+        //        $comments = Comment::with([
+        //            "user.photo",
+        //            "children.user.photo",
+        //            "children.parent.user",
+        //        ])
+        //            ->leftJoin("posts", "comments.post_id", "=", "posts.id")
+        //            ->select("comments.*")
+        //            ->where("posts.id", $post->id)
+        //            ->get();
+        //
+        //        $post = Post::findOrFail($post->id);
+        //
+        //        return view("post", compact("comments", "post"));
     }
 }

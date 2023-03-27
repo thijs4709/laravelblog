@@ -30,6 +30,10 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+    public function keywords()
+    {
+        return $this->morphToMany(Keyword::class, "keywordable");
+    }
     public function scopeFilter($query, $searchTerm = null, $searchFields = [])
     {
         //dd($query);

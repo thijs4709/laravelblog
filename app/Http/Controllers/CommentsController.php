@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\CommentsSoftDelete;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class CommentsController extends Controller
 {
@@ -37,11 +38,21 @@ class CommentsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
         //
+        if ($user = Auth::user()) {
+            $data = [
+                "post_id" => $request->post_id,
+                "user_id" => $user->id,
+                "parent_id" => $request->parent_id,
+                "body" => $request->body,
+            ];
+            Comment::create($data);
+        }
+        return back()->with("status", "Comment added successfully!");
     }
 
     /**

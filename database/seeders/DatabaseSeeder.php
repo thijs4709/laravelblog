@@ -29,8 +29,9 @@ class DatabaseSeeder extends Seeder
             UsersRolesTableSeeder::class,
             PostSeeder::class,
             CategorySeeder::class,
-            PostCategorySeed::class,
+            PostCategorySeeder::class,
             CommentSeeder::class,
+            KeywordsSeeder::class,
         ]);
         DB::statement("SET FOREIGN_KEY_CHECKS=1;");
     }

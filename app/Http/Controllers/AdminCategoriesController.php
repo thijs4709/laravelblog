@@ -51,12 +51,7 @@ class AdminCategoriesController extends Controller
                 "title.between" => "Name between 2 and 255 characters",
             ]
         );
-        $category = new category();
-        $category->name = $request->name;
-
-        $category->save();
-
-        $category->posts()->sync($request->posts, false);
+        Category::create($request->all());
         return redirect("admin/categories");
     }
 
@@ -136,5 +131,20 @@ class AdminCategoriesController extends Controller
         //return redirect()->route('admin.users');
         $name = Category::findOrFail($id)->name;
         return back()->with("status", " Post: $name restored!");
+    }
+    public function category(Category $category)
+    {
+        $sliderPosts = $category
+            ->posts()
+            ->with(["photo", "categories"])
+            ->latest("created_at")
+            ->take(5)
+            ->get();
+        $posts = $category
+            ->posts()
+            ->with(["photo", "categories"])
+            ->latest("created_at")
+            ->paginate(9);
+        return view("category", compact("category", "sliderPosts", "posts"));
     }
 }

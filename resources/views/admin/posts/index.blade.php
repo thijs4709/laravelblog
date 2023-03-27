@@ -10,16 +10,16 @@
         </div>
 
         <div class="d-flex">
-            <a class="btn btn-primary mx-1 my-2 rounded-pill" href="{{ route('posts.index') }}">All posts</a>
-            <a class="btn btn-primary mx-1 my-2 rounded-pill" href="{{ route('posts.create') }}">Create post</a>
+            <x-a-button title="All Posts" href="posts.index"></x-a-button>
+            <x-a-button title="Create Posts" href="posts.create"></x-a-button>
         </div>
     </div>
-    @if(session('status'))
-        <div class="alert alert-success">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">x</a>
-            <strong>Success!</strong>{{session('status')}}
-        </div>
+    @if(session('alert'))
+    <x-alert :model="session('alert')['model']" :type="session('alert')['type']" :message="session('alert')['message']">
+
+    </x-alert>
     @endif
+
     <table class="table table-striped shadow-lg p-3 mb-5 bg-body-tertiary rounded">
         <thead>
         <tr>
@@ -27,6 +27,7 @@
             <th>Photo</th>
             <th>Author</th>
             <th>Category</th>
+            <th>Keywords</th>
             <th>Title</th>
             <th>Body</th>
             <th>Created</th>
@@ -59,6 +60,13 @@
 {{--                    {{$categoryname}}--}}
 {{--                @endforeach--}}
             </td>
+                <td>
+                    @foreach($post->keywords as $keyword)
+                        <span class="badge badge-pill badge-info">
+                        {{$keyword->name}}
+                    </span>
+                    @endforeach
+                </td>
             <td>{{$post->title}}</td>
             <td>{{Str::limit($post->body,20,' verder lezen') }}</td>
             <td>{{$post->created_at ? $post->created_at->diffForHumans() : ''}}</td>

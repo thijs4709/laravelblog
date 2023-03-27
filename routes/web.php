@@ -18,9 +18,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 /**frontend**/
-Route::get("/", function () {
-    return view("home");
-});
+Route::get("/", [\App\Http\Controllers\HomeController::class, "index"])->name(
+    "frontend.home"
+);
 Route::get("contactformulier", [
     App\Http\Controllers\ContactController::class,
     "create",
@@ -29,9 +29,13 @@ Route::post("contactformulier", [
     App\Http\Controllers\ContactController::class,
     "store",
 ]);
-Route::get("post/{slug}", [AdminPostsController::class, "post"])->name(
+Route::get("post/{post:slug}", [AdminPostsController::class, "post"])->name(
     "frontend.post"
 );
+Route::get("category/{category:slug}", [
+    \App\Http\Controllers\AdminCategoriesController::class,
+    "category",
+])->name("category.category");
 
 /**backend**/
 
@@ -39,7 +43,7 @@ Route::group(
     ["prefix" => "admin", "middleware" => ["auth", "verified"]],
     function () {
         Route::get("/", [
-            App\Http\Controllers\HomeController::class,
+            App\Http\Controllers\BackendController::class,
             "index",
         ])->name("home");
         /*posts*/
